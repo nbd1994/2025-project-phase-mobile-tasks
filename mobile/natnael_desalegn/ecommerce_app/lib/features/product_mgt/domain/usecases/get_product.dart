@@ -1,9 +1,9 @@
 import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../../core/entities/product.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/usecases/usecase.dart';
+import '../entities/product.dart';
 import '../repositories/product_mgt_repository.dart';
 
 class GetProduct extends UseCase<Product, Params>{
