@@ -6,9 +6,7 @@ class ProductModel extends Product {
     required super.name,
     required super.price,
     required super.imageUrl,
-    required super.category,
     required super.description,
-    required super.rating,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> jsn) {
@@ -17,9 +15,7 @@ class ProductModel extends Product {
       name: jsn['name'],
       price: jsn['price'],
       imageUrl: jsn['imageUrl'],
-      category: jsn['category'],
       description: jsn['description'],
-      rating: jsn['rating'],
     );
   }
 
@@ -29,9 +25,7 @@ class ProductModel extends Product {
       'name': name,
       'price': price,
       'imageUrl': imageUrl,
-      'category': category,
       'description': description,
-      'rating': rating,
     };
   }
 }

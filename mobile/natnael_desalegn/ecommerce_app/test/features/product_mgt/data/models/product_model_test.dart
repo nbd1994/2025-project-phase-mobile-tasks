@@ -11,9 +11,7 @@ void main() {
     name: 'Sample Product',
     price: 19.99,
     imageUrl: 'https://example.com/image.jpg',
-    category: 'Electronics',
     description: 'A sample product description.',
-    rating: 4.5,
   );
   group('json', () {
     test(
@@ -34,9 +32,7 @@ void main() {
         'name': 'Sample Product',
         'price': 19.99,
         'imageUrl': 'https://example.com/image.jpg',
-        'category': 'Electronics',
         'description': 'A sample product description.',
-        'rating': 4.5,
       };
       expect(jsn, expected);
     });
