@@ -19,14 +19,14 @@ class ProductMgtRepositoryImpl implements ProductMgtRepository {
     required this.networkInfo,
   });
   @override
-  Future<Either<Failure, void>> deleteProduct(int id) async {
+  Future<Either<Failure, Product>> deleteProduct(int id) async {
     if (await networkInfo.isConnected) {
       try {
         final deletedProduct = await productMgtRemoteDataSouce.deleteProduct(
           id,
         );
         await productMgtLocalDataSource.deleteCachedProduct(deletedProduct);
-        return const Right(null);
+        return Right(deletedProduct);
       } on ServerException {
         return Left(ServerFailure());
       } on CacheException {
