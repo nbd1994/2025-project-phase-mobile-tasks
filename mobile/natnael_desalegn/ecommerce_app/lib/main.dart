@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'add_product.dart';
 import 'home_page.dart';
+import 'injection_container.dart' as di;
 import 'product_details.dart';
 import 'search_product.dart';
-
-void main() {
+void main() async {
+  await di.init();
   runApp(const MyApp());
 }
 
