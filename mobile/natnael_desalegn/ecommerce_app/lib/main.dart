@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'core/common/bloc/auth/auth_state.dart';
 import 'core/common/bloc/auth/auth_state_cubit.dart';
 import 'core/common/bloc/button/button_state_cubit.dart';
@@ -46,11 +47,11 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               scaffoldBackgroundColor: const Color(0xFFF5F5F5),
               primaryColor: Colors.white,
-              appBarTheme: const AppBarTheme(
+              appBarTheme: AppBarTheme(
                 backgroundColor: Colors.white,
                 elevation: 0,
-                iconTheme: IconThemeData(color: Colors.black87),
-                titleTextStyle: TextStyle(
+                iconTheme: const IconThemeData(color: Colors.black87),
+                titleTextStyle: GoogleFonts.manrope(
                   color: Colors.black87,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -59,14 +60,23 @@ class MyApp extends StatelessWidget {
               floatingActionButtonTheme: const FloatingActionButtonThemeData(
                 backgroundColor: Color(0xFF007AFF),
               ),
-              textTheme: const TextTheme(
-                titleLarge: TextStyle(
+              // Global text theme with Manrope
+              textTheme: GoogleFonts.manropeTextTheme(
+                Theme.of(context).textTheme,
+              ).copyWith(
+                titleLarge: GoogleFonts.manrope(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
-                titleMedium: TextStyle(fontSize: 14, color: Colors.grey),
-                titleSmall: TextStyle(fontSize: 16, color: Colors.black87),
+                titleMedium: GoogleFonts.manrope(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+                titleSmall: GoogleFonts.manrope(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
               ),
             ),
 

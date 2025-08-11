@@ -332,17 +332,13 @@ class HomePage extends StatelessWidget {
             ],
           ),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.notifications_none),
-              onPressed: () {},
-            ),
+            // IconButton(
+            //   icon: const Icon(Icons.notifications_none),
+            //   onPressed: () {},
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
               child: _logout(context),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-              child: _chatsButton(context),
             ),
             const SizedBox(width: 16),
           ],
@@ -391,28 +387,42 @@ class HomePage extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.pushNamed(context, '/add-product'),
-          child: const Icon(Icons.add, size: 28),
-        ),
+        floatingActionButton: Column(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    FloatingActionButton(
+      heroTag: 'add',
+      onPressed: () => Navigator.pushNamed(context, '/add-product'),
+      child: const Icon(Icons.add),
+    ),
+    const SizedBox(height: 12),
+    FloatingActionButton(
+      heroTag: 'chat',
+      onPressed: () => Navigator.pushNamed(context, '/users'),
+      child: const Icon(Icons.people),
+    ),
+  ],
+),
       ),
     );
   }
 }
 
+// ...existing code...
 class _ProductCard extends StatelessWidget {
   final Product product;
   const _ProductCard({required this.product, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    const double rating = 4.0;
+
     return GestureDetector(
-      onTap:
-          () => Navigator.pushNamed(
-            context,
-            '/product-details',
-            arguments: product.id,
-          ),
+      onTap: () => Navigator.pushNamed(
+        context,
+        '/product-details',
+        arguments: product.id,
+      ),
       child: Card(
         color: const Color(0xFFF8F8F8),
         elevation: 2,
@@ -421,7 +431,7 @@ class _ProductCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image at top with rounded corners
+            // Image with a bit smaller height so text area is more visible
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(16),
@@ -430,51 +440,102 @@ class _ProductCard extends StatelessWidget {
               child: Image.network(
                 product.imageUrl,
                 width: double.infinity,
-                height: 150,
+                height: 160, // was 180
                 fit: BoxFit.cover,
-                errorBuilder:
-                    (_, __, ___) => Container(
-                      width: double.infinity,
-                      height: 180,
-                      color: Colors.grey.shade200,
-                      child: const Icon(Icons.broken_image, size: 40),
-                    ),
+                errorBuilder: (_, __, ___) => Container(
+                  width: double.infinity,
+                  height: 160,
+                  color: Colors.grey.shade200,
+                  child: const Icon(Icons.broken_image, size: 40),
+                ),
               ),
             ),
-            // Name and price row
+
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              child: Row(
+              padding: const EdgeInsets.fromLTRB(12, 10, 12, 12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Expanded(
-                    child: Text(
-                      product.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black87,
+                  // Name and price
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          product.name,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            color: Colors.black87,
+                          ),
+                        ),
                       ),
-                    ),
+                      Text(
+                        '\$${product.price}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    '\$${product.price}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
+                  const SizedBox(height: 8),
+
+                  // Category chip + rating stars
+                  Row(
+                    children: [
+                      // _CategoryChip(text: 'Mens'),
+                      const Spacer(),
+                      _RatingStars(rating: rating),
+                      const SizedBox(width: 6),
+                      Text(
+                        '(${rating.toStringAsFixed(1)})',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey.shade700,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-            // Optional spacing for future rating/category
-            const SizedBox(height: 8),
           ],
         ),
       ),
     );
   }
 }
+
+
+class _RatingStars extends StatelessWidget {
+  final double rating; // e.g., 4.0
+  const _RatingStars({required this.rating});
+
+  @override
+  Widget build(BuildContext context) {
+    const total = 5;
+    final filled = rating.floor();
+    final half = (rating - filled) >= 0.5 ? 1 : 0;
+    final empty = total - filled - half;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (int i = 0; i < filled; i++)
+          const Icon(Icons.star_rounded, size: 16, color: Color(0xFFFFC107)),
+        if (half == 1)
+          const Icon(Icons.star_half_rounded, size: 16, color: Color(0xFFFFC107)),
+        for (int i = 0; i < empty; i++)
+          Icon(Icons.star_border_rounded, size: 16, color: Colors.grey.shade400),
+      ],
+    );
+  }
+}
+// ...existing code...
 
 Widget _logout(BuildContext context) {
   return SizedBox(
@@ -496,27 +557,27 @@ Widget _logout(BuildContext context) {
   );
 }
 
-Widget _chatsButton(BuildContext context) {
-  return Builder(
-    builder: (context) {
-      return SizedBox(
-        height: 70.0,
-        width: 140.0,
-        child: OutlinedButton(
-          onPressed: () => Navigator.pushNamed(context, '/users'),
-          style: OutlinedButton.styleFrom(
-            foregroundColor: const Color(0xFFE53935),
-            side: const BorderSide(color: Color(0xFFE53935)),
-            minimumSize: const Size.fromHeight(48),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-          ),
-          child: const Text('People'),
-        ),
-      );
-    }
-  );
-}
+// Widget _chatsButton(BuildContext context) {
+//   return Builder(
+//     builder: (context) {
+//       return SizedBox(
+//         height: 70.0,
+//         width: 140.0,
+//         child: OutlinedButton(
+//           onPressed: () => Navigator.pushNamed(context, '/users'),
+//           style: OutlinedButton.styleFrom(
+//             foregroundColor: const Color(0xFFE53935),
+//             side: const BorderSide(color: Color(0xFFE53935)),
+//             minimumSize: const Size.fromHeight(48),
+//             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+//             textStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+//           ),
+//           child: const Text('People'),
+//         ),
+//       );
+//     }
+//   );
+// }
 
 class Utils {
   EdgeInsets padding({hor = 25.0, ver = 0.0}) {
