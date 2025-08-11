@@ -23,11 +23,11 @@ void main() {
     );
   });
 
-  final tId = 1;
+  final tId = '1';
   final ProductModel tProductModel = const ProductModel(
-    id: 1,
+    id: '1',
     name: 'Sample Product',
-    price: 19.99,
+    price: 19,
     imageUrl: 'https://example.com/image.jpg',
     description: 'A sample product description.',
   );

@@ -1,21 +1,21 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-
+import 'package:http_parser/http_parser.dart';
+import '../../../../core/constants/api_urls.dart';
 import '../../../../core/error/exceptions.dart';
 import '../models/product_model.dart';
 
 abstract class ProductMgtRemoteDataSource {
-  Future<ProductModel> deleteProduct(int id);
-  Future<ProductModel> getProduct(int id);
+  Future<ProductModel> deleteProduct(String id);
+  Future<ProductModel> getProduct(String id);
   Future<ProductModel> insertProduct(ProductModel product);
   Future<ProductModel> updateProduct(ProductModel product);
   Future<List<ProductModel>> getAllProducts();
 }
 
 // ignore: constant_identifier_names
-const BASE_URL =
-    'https://g5-flutter-learning-path-be-tvum.onrender.com/api/v1/products/';
+
 
 class ProductMgtRemoteDataSourceImpl implements ProductMgtRemoteDataSource {
   final http.Client client;
@@ -23,9 +23,9 @@ class ProductMgtRemoteDataSourceImpl implements ProductMgtRemoteDataSource {
   ProductMgtRemoteDataSourceImpl({required this.client});
 
   @override
-  Future<ProductModel> deleteProduct(int id) async {
+  Future<ProductModel> deleteProduct(String id) async {
     final response = await client.delete(
-      Uri.parse('$BASE_URL$id'),
+      Uri.parse('${ApiUrls.baseUrlProducts}$id'),
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
@@ -38,11 +38,12 @@ class ProductMgtRemoteDataSourceImpl implements ProductMgtRemoteDataSource {
   @override
   Future<List<ProductModel>> getAllProducts() async {
     final response = await client.get(
-      Uri.parse(BASE_URL),
+      Uri.parse(ApiUrls.baseUrlProducts),
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      final List<dynamic> jsonList = json.decode(response.body);
+      final decoded = json.decode(response.body);
+      final List<dynamic> jsonList = decoded['data'];
       return jsonList
           .map((item) => ProductModel.fromJson(item as Map<String, dynamic>))
           .toList();
@@ -52,13 +53,14 @@ class ProductMgtRemoteDataSourceImpl implements ProductMgtRemoteDataSource {
   }
 
   @override
-  Future<ProductModel> getProduct(int id) async {
+  Future<ProductModel> getProduct(String id) async {
     final response = await client.get(
-      Uri.parse('$BASE_URL$id'),
+      Uri.parse('${ApiUrls.baseUrlProducts}$id'),
       headers: {'Content-Type': 'application/json'},
     );
     if (response.statusCode == 200) {
-      return ProductModel.fromJson(json.decode(response.body));
+      final decoded = json.decode(response.body);
+      return ProductModel.fromJson(decoded['data']);
     } else {
       throw ServerException();
     }
@@ -66,22 +68,31 @@ class ProductMgtRemoteDataSourceImpl implements ProductMgtRemoteDataSource {
 
   @override
   Future<ProductModel> insertProduct(ProductModel product) async {
-    final response = await client.post(
-      Uri.parse(BASE_URL),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(product.toJson()),
-    );
+    var request = http.MultipartRequest('POST', Uri.parse(ApiUrls.baseUrlProducts));
+
+    request.fields['name'] = product.name;
+    request.fields['price'] = product.price.toString();
+    request.fields['description'] = product.description;
+
+    if(product.imageUrl.isNotEmpty){
+      request.files.add(await http.MultipartFile.fromPath('image', product.imageUrl, contentType: MediaType('image', 'jpeg')));
+    }
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
     if (response.statusCode == 201 || response.statusCode == 200) {
-      return ProductModel.fromJson(json.decode(response.body));
+      final decoded = json.decode(response.body);
+      return ProductModel.fromJson(decoded['data']);
     } else {
+      print('API Error: ${response.body}');
       throw ServerException();
     }
+  
   }
 
   @override
   Future<ProductModel> updateProduct(ProductModel product) async {
     final response = await client.put(
-      Uri.parse('$BASE_URL${product.id}'),
+      Uri.parse('${ApiUrls.baseUrlProducts}${product.id}'),
       headers: {'Content-Type': 'application/json'},
       body: json.encode(product.toJson()),
     );

@@ -22,14 +22,12 @@ const String INVALID_INPUT_FAILURE_MESSAGE =
     'Invalid Input - The number must be a positive float or zero.';
 
 String _mapFailureToMessage(Failure failure) {
-  // Instead of a regular 'if (failure is ServerFailure)...'
-  switch (failure.runtimeType) {
-    case ServerFailure _:
-      return SERVER_FAILURE_MESSAGE;
-    case CacheFailure _:
-      return CACHE_FAILURE_MESSAGE;
-    default:
-      return 'Unexpected Error';
+  if (failure is ServerFailure) {
+    return SERVER_FAILURE_MESSAGE;
+  } else if (failure is CacheFailure) {
+    return CACHE_FAILURE_MESSAGE;
+  } else {
+    return 'Unexpected Error';
   }
 }
 

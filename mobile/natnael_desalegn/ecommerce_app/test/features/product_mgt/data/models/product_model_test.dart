@@ -6,10 +6,10 @@ import 'package:flutter_test/flutter_test.dart';
 import '../../../../fixtures/get_fixtures.dart';
 
 void main() {
-  final tproduct = ProductModel(
-    id: 1,
+  final tproduct = const ProductModel(
+    id: '1',
     name: 'Sample Product',
-    price: 19.99,
+    price: 19,
     imageUrl: 'https://example.com/image.jpg',
     description: 'A sample product description.',
   );

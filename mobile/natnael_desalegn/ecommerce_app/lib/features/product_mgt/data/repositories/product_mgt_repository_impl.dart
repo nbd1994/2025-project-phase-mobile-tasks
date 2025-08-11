@@ -19,7 +19,7 @@ class ProductMgtRepositoryImpl implements ProductMgtRepository {
     required this.networkInfo,
   });
   @override
-  Future<Either<Failure, Product>> deleteProduct(int id) async {
+  Future<Either<Failure, Product>> deleteProduct(String id) async {
     if (await networkInfo.isConnected) {
       try {
         final deletedProduct = await productMgtRemoteDataSouce.deleteProduct(
@@ -38,7 +38,7 @@ class ProductMgtRepositoryImpl implements ProductMgtRepository {
   }
 
   @override
-  Future<Either<Failure, Product>> getProduct(int id) async {
+  Future<Either<Failure, Product>> getProduct(String id) async {
     if (await networkInfo.isConnected) {
       try {
         final pdt = await productMgtRemoteDataSouce.getProduct(id);

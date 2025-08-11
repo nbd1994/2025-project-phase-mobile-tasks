@@ -13,7 +13,7 @@ class ProductModel extends Product {
     return ProductModel(
       id: jsn['id'],
       name: jsn['name'],
-      price: jsn['price'],
+      price: jsn['price'] is String ? double.parse(jsn['price']) : (jsn['price'] as num).toDouble(),
       imageUrl: jsn['imageUrl'],
       description: jsn['description'],
     );
@@ -23,7 +23,7 @@ class ProductModel extends Product {
     return {
       'id': id,
       'name': name,
-      'price': price,
+      'price': price.toString(),
       'imageUrl': imageUrl,
       'description': description,
     };

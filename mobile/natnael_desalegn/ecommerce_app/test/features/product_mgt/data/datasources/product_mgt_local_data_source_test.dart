@@ -85,7 +85,7 @@ group('all', (){
 
       // Assert
       expect(
-        () => localDataSourceImpl.getCachedSingleProduct(1000),
+        () => localDataSourceImpl.getCachedSingleProduct('1000'),
         throwsA(isA<CacheException>()),
       );
     });

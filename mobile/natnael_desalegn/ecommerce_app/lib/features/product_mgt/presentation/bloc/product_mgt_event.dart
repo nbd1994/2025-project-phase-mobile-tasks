@@ -10,7 +10,7 @@ sealed class ProductMgtEvent extends Equatable {
 class LoadAllProductEvent extends ProductMgtEvent {}
 
 class GetSingleProductEvent extends ProductMgtEvent {
-  final int id;
+  final String id;
   const GetSingleProductEvent(this.id);
 
   @override
@@ -26,7 +26,7 @@ class UpdateProductEvent extends ProductMgtEvent {
 }
 
 class DeleteProductEvent extends ProductMgtEvent {
-  final int id;
+  final String id;
   const DeleteProductEvent(this.id);
 
   @override

@@ -17,7 +17,7 @@ abstract class ProductMgtLocalDataSource {
   //this should delete if the product exists
   Future<void> deleteCachedProduct(ProductModel pdt);
 
-  Future<ProductModel> getCachedSingleProduct(int id);
+  Future<ProductModel> getCachedSingleProduct(String id);
 }
 
 // ignore: constant_identifier_names
@@ -46,6 +46,7 @@ class ProductMgtLocalDataSourceImpl implements ProductMgtLocalDataSource {
     try {
       final jsonString = _encodeProducts(pdts);
       await sharedPreferences.setString(CACHED_PRODUCTS, jsonString);
+      // print(sharedPreferences.getString(CACHED_PRODUCTS));
     } catch (e) {
       throw CacheException();
     }
@@ -55,6 +56,7 @@ class ProductMgtLocalDataSourceImpl implements ProductMgtLocalDataSource {
   Future<void> cacheSingleProduct(ProductModel pdt) async {
     try {
       final jsonString = sharedPreferences.getString(CACHED_PRODUCTS);
+      // print(jsonString);
       List<ProductModel> products = _decodeProducts(jsonString);
       // Check if product exists, update or add
       final index = products.indexWhere((element) => element.id == pdt.id);
@@ -104,7 +106,7 @@ class ProductMgtLocalDataSourceImpl implements ProductMgtLocalDataSource {
   }
 
   @override
-  Future<ProductModel> getCachedSingleProduct(int id) {
+  Future<ProductModel> getCachedSingleProduct(String id) {
     final jsonString = sharedPreferences.getString(CACHED_PRODUCTS);
     if (jsonString != null) {
       final products = _decodeProducts(jsonString);
