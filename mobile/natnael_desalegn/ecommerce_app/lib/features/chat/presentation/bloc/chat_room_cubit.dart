@@ -39,11 +39,17 @@ class ChatRoomCubit extends Cubit<ButtonState> {
     );
   }
 
-  Future<void> sendText(String text) async {
-    final res = await send(SendMessageParams(chatId: chatId, content: text));
+  Future<void> sendText({required String text, required String senderId}) async {
+    final res = await send(SendMessageParams(senderId: senderId, chatId: chatId, content: text));
     res.fold(
-      (f) => emit(ButtonFailureState(errorMessage: f.toString() ?? 'Send failed')),
-      (_) => null,
+      (f){
+        print('hereeeeeeeeeeeeee $f');
+        emit(ButtonFailureState(errorMessage: f.toString() ?? 'Send failed'));
+
+      },
+      (e) {
+        print('send text in side cubit but not error maybe here');
+      }
     );
   }
 

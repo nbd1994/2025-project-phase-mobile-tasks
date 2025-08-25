@@ -85,13 +85,14 @@ class ChatRepositoryImpl implements ChatRepository {
     required String chatId,
     required String content,
     String type = 'text',
+    required String senderId
   }) async {
     try {
       await socket.sendMessage(
         MessageModel(
           id: '',
           chatId: chatId,
-          senderId: '',
+          senderId: senderId,
           content: content,
           type: type,
         ),

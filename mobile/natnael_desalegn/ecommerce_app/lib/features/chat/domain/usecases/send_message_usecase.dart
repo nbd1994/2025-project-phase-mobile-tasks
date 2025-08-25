@@ -7,7 +7,8 @@ class SendMessageParams {
   final String chatId;
   final String content;
   final String type;
-  SendMessageParams({required this.chatId, required this.content, this.type = 'text'});
+  final String senderId;
+  SendMessageParams({required this.senderId, required this.chatId, required this.content, this.type = 'text'});
 }
 
 class SendMessageUsecase extends UseCase<void, SendMessageParams> {
@@ -15,5 +16,5 @@ class SendMessageUsecase extends UseCase<void, SendMessageParams> {
   SendMessageUsecase(this.repo);
   @override
   Future<Either<Failure, void>> call(SendMessageParams p) =>
-      repo.sendMessage(chatId: p.chatId, content: p.content, type: p.type);
+      repo.sendMessage(chatId: p.chatId, content: p.content, type: p.type, senderId: p.senderId);
 }

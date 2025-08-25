@@ -15,7 +15,8 @@ class MessageModel extends Message {
     return MessageModel(
       id: json['_id'],
       chatId: chat is Map ? chat['_id'] : (json['chatId'] ?? ''),
-      senderId: sender is Map ? sender['_id'] : (json['senderId'] ?? ''),
+      // senderId: sender is Map ? sender['_id'] : (json['senderId'] ?? ''),
+      senderId: sender is Map ? sender['email'] : (json['senderEmail'] ?? ''),
       content: json['content'] ?? '',
       type: json['type'] ?? 'text',
     );

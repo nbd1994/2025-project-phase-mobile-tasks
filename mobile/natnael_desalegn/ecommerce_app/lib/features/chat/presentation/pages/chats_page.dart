@@ -27,7 +27,7 @@ class _ChatsPageState extends State<ChatsPage> {
       final token = await sl<AuthLocalService>().getToken();
       if (token.isNotEmpty) {
         final payload = JwtDecoder.decode(token);
-        setState(() => _myId = payload['sub'] as String?);
+        setState(() => _myId = payload['email'] as String?);
       }
     } catch (_) {
       // ignore: token decode failures fall back to null
@@ -76,7 +76,7 @@ class _ChatsPageState extends State<ChatsPage> {
 
                       // Determine "other" participant using myId
                       final other = (_myId != null && _myId!.isNotEmpty)
-                          ? (c.user1.id == _myId ? c.user2 : c.user1)
+                          ? (c.user1.email == _myId ? c.user2 : c.user1)
                           : c.user1;
 
                       return ListTile(
